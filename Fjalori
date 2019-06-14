@@ -1,0 +1,153 @@
+#include <iostream>
+#include <fstream>
+#include <string.h>
+#include <time.h>
+
+/// Implementimi me ane te listave
+
+/**
+Se pari marr te mireqene qe skedari yne eshte i strukturuar dhe ku fjalet jane ose ne shkronja kapitale ose jo.
+Gjithashtu fjalet jane te ndara nga njera tjetra me ane te hapesirave ose rreshtave te rinj, pra kam supozuar se skedari ka kaluar
+nepermjet nje programi tjeter ku shenjat e pikesimit , . ... ? ! etj jane hequr me pare.
+Kompleksiteti i ketij programi eshte O(n*n), ku n eshte sasia e strigjeve pasi kur hedhim nje fjale te re ne liste kerkojme
+ne te gjithe gjatesine e saj per te gjetur nese fjala ekziston ose jo me pare.
+*/
+
+/// Krijoj klasen Node
+
+using namespace std;
+
+class Node
+{
+
+public:
+    int key;
+    string word;
+    Node* next;
+
+    Node()
+    {
+        key = -1;
+        word = "";
+        next = NULL;
+    }
+
+    Node(string w)
+    {
+        word = w;
+    }
+};
+
+/// Menu
+string showOptionMenu()
+{
+
+    string filename;
+    int zgjedhje;
+
+    cout << "Zgjidhni skedarin qe deshironi te hapni" << endl;
+    cout << "\n";
+
+    //Prints a list with the names of files available
+    cout << "1. 100Fjale.txt \n"
+         << "2. 1000Fjale.txt \n"
+         << "3. 100000Fjale.txt \n"
+         << "4. 1MilionFjale.txt \n";
+
+    cout << "--------------------------------------------------------\n";
+
+    cout << "\nSkedari me nr: ";
+    cin >> zgjedhje;
+
+    switch(zgjedhje)
+    {
+
+    case 1:
+        filename = "100Fjale.txt";
+        break;
+
+    case 2:
+        filename = "1000Fjale.txt";
+        break;
+
+    case 3:
+        filename = "100000Fjale.txt";
+        break;
+
+    case 4:
+        filename = "1MilionFjale.txt";
+        break;
+
+    default:
+        cout << "Please select a file from the list";
+        break;
+    }
+    return filename;
+
+}
+
+int main()
+{
+    /// Krijoj koken e listes
+    Node *head = new Node();
+    head->word = "";
+    head->key = -1;
+
+    ///Krijoj variablat per matjen e kohes
+    clock_t t1,t2;
+
+    string fileWord;
+
+    t1 = clock();
+
+    ifstream file;
+
+    ///Hap skedar
+    file.open(showOptionMenu().c_str());
+
+    /// Lexoj skedarin string pas stringu
+    while(file >> fileWord)
+    {
+
+        Node* tmp = head;
+        bool exist = false;
+
+        while(tmp->next != NULL && !exist)
+        {
+
+            /// Kontrolloj nqs ekziston fjala ne liste
+            if(tmp->word == fileWord)
+            {
+                exist = true;
+            }
+
+            tmp = tmp->next;
+        }
+
+        //If the word was not found then a new node is created
+
+        if(!exist)
+        {
+            Node* new_element = new Node(fileWord);
+            new_element->next = head;
+            head = new_element;
+
+            ///Vlera celes merret nr qe perfaqeson shkronjen e pare ne kodin ascii
+            new_element->key = (int)fileWord.at(0);
+
+            cout << new_element->key << "\t" << new_element->word << endl;
+        }
+
+    }
+
+    file.close();
+
+    t2 = clock();
+
+    float dif ((float)t2 - (float)t1);
+
+    cout << "\nKoha ekzekutimit: " << dif/CLOCKS_PER_SEC << "s" << endl;
+
+    return 0;
+}
+
