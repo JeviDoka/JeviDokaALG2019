@@ -7,7 +7,8 @@ using namespace std;
 
 /**
 Kompleksiteti i ketij algoritmi eshte O(n) , pasi per cdo string qe ne marrim nga skedaret dhe percaktojme vleren
-sipas funksionit hash i hedhim stringjet ne strukturen tone.
+sipas funksionit hash i hedhim stringjet ne strukturen tone dhe supozojme qe keto stringje plotesojne kushtin e rastit me te keq
+pra kemi perplasje ne vlerat e funksionit Hash.
 */
 
 struct Node{
