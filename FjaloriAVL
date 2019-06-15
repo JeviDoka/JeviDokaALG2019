@@ -4,6 +4,8 @@
 
 using namespace std;
 
+///Kompleksiteti eshte i njejte me pemen e kerkimit binar pra nlogn
+
 class Node{
 
 	public:
