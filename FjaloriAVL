@@ -161,7 +161,7 @@ string menu(){
 	string filename;
 	int zgjedhje;
 
-	cout << "Please choose the file you want to create the dictionary" << endl;
+	cout << "Skedaret qe mund te zgjidhen" << endl;
 	cout << "________________________________________________________\n";
 
 	cout << "1. 100Fjale.txt \n"
@@ -231,7 +231,7 @@ int main(){
 
     float dif ((float)t2 - (float)t1);
 
-    cout << "\nTime needed: " << dif/CLOCKS_PER_SEC << "s" << endl;
+    cout << "\nKoha ekzekutimit: " << dif/CLOCKS_PER_SEC << "s" << endl;
 
 	return 0;
 }
