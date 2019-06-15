@@ -78,7 +78,7 @@ string menu()
         break;
 
     default:
-        cout << "Please select a file from the list";
+        cout << "Zgjidhni skedarin";
         break;
     }
     return filename;
@@ -122,8 +122,6 @@ int main()
 
             tmp = tmp->next;
         }
-
-        //If the word was not found then a new node is created
 
         if(!exist)
         {
