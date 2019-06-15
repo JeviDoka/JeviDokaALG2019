@@ -1,0 +1,124 @@
+#include <iostream>
+#include <time.h>
+#include <fstream>
+
+using namespace std;
+
+struct Node{
+
+	public:
+		int key;
+		string word;
+		Node* next;
+
+		Node(string w){
+			key = (int)w.at(0);
+			word = w;
+		}
+};
+
+string menu(){
+
+	string filename;
+	int zgjedhje;
+
+	cout << "Keta jane skedaret qe mund te zgjidhni" << endl;
+	cout << "\n";
+	cout << "1. 100Fjale.txt \n"
+		 << "2. 1000Fjale.txt \n"
+		 << "3. 100000Fjale.txt \n"
+		 << "4. 1MilFjale.txt \n";
+	cout << "\n";
+
+	cout << "\nFile nr: ";
+	cin >> zgjedhje;
+
+	switch(zgjedhje){
+
+	case 1:
+		filename = "100Fjale.txt";
+		break;
+
+	case 2:
+		filename = "1000Fjale.txt";
+		break;
+
+	case 3:
+		filename = "100000Fjale.txt";
+		break;
+
+	case 4:
+		filename = "1MilFjale.txt";
+		break;
+
+	default:
+		cout << "Zgjidhni skedarin qe do te hapni";
+		break;
+	}
+	return filename;
+}
+
+Node* add(Node* head, string fileWord){
+
+	Node* new_element = new Node(fileWord);
+	new_element->next = head;
+	head = new_element;
+
+	return new_element;
+}
+
+int main(){
+
+	clock_t t1,t2;
+
+	string fileWord;
+
+	t1 = clock();
+
+	ifstream file;
+
+	file.open(menu().c_str());
+
+	/// 52 = 26 shkronja * 2(madhe ose e vogel)
+	Node* H[52];
+
+	for(int i = 0; i < 52; i++){
+
+		H[i] = NULL;
+	}
+
+	int kontroll = 0;
+
+	while(file >> fileWord){
+
+		int vleraHash = (int)fileWord.at(0) % 52;
+
+		Node* tmp = H[vleraHash];
+
+		while(tmp != NULL){
+			if(tmp->word == fileWord){
+				kontroll = 1;
+			}
+			tmp = tmp->next;
+		}
+
+		if(kontroll == 0){
+
+			int vleraHash = (int)fileWord.at(0) % 52;
+
+			H[vleraHash] = add(H[vleraHash], fileWord);
+
+			cout << (int)fileWord.at(0) % 52 << "\t" << fileWord << endl;
+		}
+	}
+
+	file.close();
+
+    t2 = clock();
+
+    float dif ((float)t2 - (float)t1);
+
+    cout << "\nKoha ekzekutimit: " << dif/CLOCKS_PER_SEC << "s" << endl;
+
+	return 0;
+}
