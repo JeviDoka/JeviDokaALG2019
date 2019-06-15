@@ -1,0 +1,237 @@
+#include <iostream>
+#include <fstream>
+#include <time.h>
+
+using namespace std;
+
+class Node{
+
+	public:
+		int key;
+		string word;
+		Node* left;
+		Node* right;
+		int lartesia;
+		int diferencaLartesise;
+};
+
+Node* newNode(string fileWord){
+    Node* temp = new Node;
+
+    temp->key = (int)fileWord.at(0);
+	temp->word = fileWord;
+
+    temp->left = NULL;
+    temp->right = NULL;
+
+    return temp;
+}
+
+int max(int a, int b){
+	if(a > b)
+        return a;
+	else
+        return b;
+}
+
+void ndryshoLartesi(Node* tmp){
+	int leftNodeHeight, rightNodeHeight;
+
+	if(tmp->left == NULL){
+		leftNodeHeight = -1;
+	}
+	else{
+		leftNodeHeight = tmp->left->lartesia;
+	}
+
+	if(tmp->right == NULL){
+		rightNodeHeight = -1;
+	}
+	else{
+		rightNodeHeight = tmp->right->lartesia;
+	}
+
+    tmp->lartesia = 1 + max(leftNodeHeight, rightNodeHeight);
+
+    /// diferenca e lartesise na sherben per te llogaritur nese pema nuk eshte e balancuar
+    /// kjo variabel duhet te kete vlere {-1,0,1} per te thene qe pema eshte e balancuar
+    tmp->diferencaLartesise = rightNodeHeight - leftNodeHeight;
+}
+
+bool ekziston(Node* root, string fileWord) {
+	if(root == NULL)
+        return false;
+
+	if(root->word == fileWord){
+		return true;
+	}
+    return ekziston(root->left, fileWord) || ekziston(root->right, fileWord);
+}
+
+Node *rrotulloDjathas(Node* tmp)
+{
+    Node* parent = tmp->left;
+    tmp->left = parent->right;
+    parent->right = tmp;
+
+   	ndryshoLartesi(tmp);
+   	ndryshoLartesi(parent);
+
+    return parent;
+}
+
+///Rrotulloj majtas
+Node* rrotulloMajtas(Node *tmp)
+{
+    Node* parent = tmp->right;
+    tmp->right = parent->left;
+    parent->left = tmp;
+
+   	ndryshoLartesi(tmp);
+   	ndryshoLartesi(parent);
+
+    return parent;
+}
+
+Node* rrotullojMajtasMajtas(Node* tmp){
+	return rrotulloDjathas(tmp);
+}
+
+Node* rrotulloMajtasDjathas(Node* tmp){
+	tmp->left = rrotulloMajtas(tmp->left);
+	return rrotullojMajtasMajtas(tmp);
+}
+
+Node* rrotulloDjathtasDjathtas(Node* tmp){
+	return rrotulloMajtas(tmp);
+}
+
+Node* rrotulloDjathasMajtas(Node* tmp){
+	tmp->right = rrotulloDjathas(tmp->right);
+	return rrotulloDjathtasDjathtas(tmp);
+}
+
+Node* balance(Node* tmp){
+
+    ///Krahu i majte i prindit
+	if(tmp->diferencaLartesise == -2){
+
+		/// Majtas-Majtas
+		if(tmp->left->diferencaLartesise <= 0){
+			return rrotullojMajtasMajtas(tmp);
+		}
+		///Majtas - Djathtas
+		else{
+			return rrotulloMajtasDjathas(tmp);
+		}
+	}
+	else if(tmp->diferencaLartesise == +2){
+
+		///Krahu i djathte i prindit
+		if(tmp->right->diferencaLartesise >= 0){
+			return rrotulloDjathtasDjathtas(tmp);
+		}
+		else{
+			return rrotulloDjathtasDjathtas(tmp);
+		}
+	}
+	return tmp;
+}
+
+Node* insert(Node* tmp, string fileWord){
+
+	int key = (int)fileWord.at(0);
+
+    if (tmp == NULL) return(newNode(fileWord));
+
+    if (key < tmp->key){
+    	tmp->left = insert(tmp->left, fileWord);
+	}
+    else{
+    	tmp->right = insert(tmp->right, fileWord);
+	}
+
+    ndryshoLartesi(tmp);
+
+    return balance(tmp);
+}
+
+string menu(){
+
+	string filename;
+	int zgjedhje;
+
+	cout << "Please choose the file you want to create the dictionary" << endl;
+	cout << "________________________________________________________\n";
+
+	cout << "1. 100Fjale.txt \n"
+		 << "2. 1000Fjale.txt \n"
+		 << "3. 1QMFjale.txt \n"
+		 << "4. 1MFjale.txt \n";
+
+	cout << "\n";
+
+	cout << "\nSkedari i zgjedhur me nr: ";
+	cin >> zgjedhje;
+
+	switch(zgjedhje){
+
+	case 1:
+		filename = "100Fjale.txt";
+		break;
+
+	case 2:
+		filename = "1000Fjale.txt";
+		break;
+
+	case 3:
+		filename = "1QMFjale.txt";
+		break;
+
+	case 4:
+		filename = "1MFjale.txt";
+		break;
+
+	default:
+		cout << "Zgjidhni nje skedar";
+		break;
+	}
+	return filename;
+
+
+}
+
+int main(){
+
+	clock_t t1, t2;
+
+	t1 = clock();
+
+	string fileWord;
+	ifstream file;
+
+	file.open(menu().c_str());
+
+	file >> fileWord;
+	Node* root = newNode(fileWord);
+
+	cout << (int)fileWord.at(0) << "\t" << fileWord << endl;
+
+	while(file >> fileWord){
+
+		if(!ekziston(root, fileWord)){
+			root = insert(root, fileWord);
+			cout << (int)fileWord.at(0) << "\t" << fileWord << endl;
+		}
+	}
+
+	file.close();
+
+    t2 = clock();
+
+    float dif ((float)t2 - (float)t1);
+
+    cout << "\nTime needed: " << dif/CLOCKS_PER_SEC << "s" << endl;
+
+	return 0;
+}
