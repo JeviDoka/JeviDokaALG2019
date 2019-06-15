@@ -91,18 +91,17 @@ string menu(){
 	string filename;
 	int zgjedhje;
 
-	cout << "Please choose the file you want to create the dictionary" << endl;
+	cout << "Keta jane skedaret qe mund te zgjidhni: " << endl;
 	cout << "n";
 
-	//Prints a list with the names of files available
 	cout << "1. 100Fjale.txt \n"
 		 << "2. 1000Fjale.txt \n"
 		 << "3. 100000Fjale.txt \n"
 		 << "4. 1000000Fjale.txt \n";
 
-	cout << "--------------------------------------------------------\n";
+	cout << "\n";
 
-	cout << "\nFile nr: ";
+	cout << "\Skedari nr: ";
 	cin >> zgjedhje;
 
 	switch(zgjedhje){
